@@ -1,0 +1,13 @@
+.env
+backend/target/
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+.m2/
+.pnpm-store/
+.idea/
+.vscode/
+*.log
+coverage/
+test-results/
+playwright-report/

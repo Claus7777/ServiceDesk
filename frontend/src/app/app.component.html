@@ -1,0 +1,42 @@
+<header class="topbar"><a href="/" class="brand"><span class="brand-icon">S</span> Service Desk</a><span class="demo-label">Portfolio edition · v0.1</span></header>
+<main>
+  <div class="heading"><div><p class="eyebrow">WORKSPACE / REQUESTS</p><h1>A clearer path to resolved.</h1><p class="subtitle">Keep requests organized, prioritize what matters, and move work forward.</p></div><span class="count">{{ total() }} requests</span></div>
+  <p class="demo-note">Shared local demo: authentication and staff permissions are planned for the next milestone.</p>
+  @if (error()) { <div class="message error" role="alert">{{ error() }} <button type="button" (click)="load(page())" [disabled]="loading()">Refresh list</button></div> }
+  @if (notice()) { <p class="message success" role="status">{{ notice() }}</p> }
+  <div class="workspace">
+    <section class="panel create-panel" aria-labelledby="create-heading">
+      <p class="eyebrow">START HERE</p><h2 id="create-heading">New request</h2><p class="muted">Tell the team what needs attention.</p>
+      <form [formGroup]="form" (ngSubmit)="create()">
+        <label for="title">Title</label><input id="title" formControlName="title" maxlength="120" placeholder="e.g. Reception printer is offline" aria-describedby="title-error">
+        @if (form.controls.title.touched && form.controls.title.invalid) { <small id="title-error" class="field-error">Enter a title (1–120 characters).</small> }
+        <label for="description">Description</label><textarea id="description" formControlName="description" rows="5" maxlength="4000" placeholder="What happened? What would help?" aria-describedby="description-error"></textarea>
+        @if (form.controls.description.touched && form.controls.description.invalid) { <small id="description-error" class="field-error">Enter a description (1–4,000 characters).</small> }
+        <label for="priority">Priority</label><select id="priority" formControlName="priority"><option value="LOW">Low</option><option value="MEDIUM">Medium</option><option value="HIGH">High</option></select>
+        <button class="primary" type="submit" [disabled]="saving() || loading()">{{ saving() ? 'Creating…' : 'Create request' }}</button>
+      </form>
+    </section>
+    <section class="panel requests-panel" aria-labelledby="requests-heading" [attr.aria-busy]="loading()">
+      <div class="panel-heading"><h2 id="requests-heading">Requests</h2><span class="muted">Newest first</span></div>
+      <form class="filters" (ngSubmit)="load()">
+        <div><label for="search">Search title</label><input id="search" name="search" [(ngModel)]="search" maxlength="120" placeholder="Find a request" [disabled]="loading()"></div>
+        <div><label for="status-filter">Status</label><select id="status-filter" name="status" [(ngModel)]="status" [disabled]="loading()"><option value="">All statuses</option><option value="NEW">New</option><option value="IN_PROGRESS">In progress</option><option value="RESOLVED">Resolved</option></select></div>
+        <button type="submit" [disabled]="loading()">Apply</button>
+      </form>
+      @if (loading()) { <p class="empty" role="status">Loading requests…</p> }
+      @else {
+        @for (request of requests(); track request.id) {
+          <article class="request-row">
+            <div class="request-main"><span class="priority" [class.high]="request.priority === 'HIGH'">{{ label(request.priority) }} priority</span><button class="title-button" type="button" (click)="selected.set(request)">{{ request.title }}</button><p>{{ request.description }}</p><small class="muted">Created {{ request.createdAt | date:'mediumDate' }}</small></div>
+            <div class="status-control"><label [for]="'status-' + request.id" class="sr-only">Status for {{ request.title }}</label><select [id]="'status-' + request.id" [value]="request.status" (change)="changeStatus(request, $event)" [disabled]="updating() !== null"><option value="NEW">New</option><option value="IN_PROGRESS">In progress</option><option value="RESOLVED">Resolved</option></select></div>
+          </article>
+        } @empty { <div class="empty"><h3>No requests here yet.</h3><p>Create your first request, or adjust your filters.</p></div> }
+      }
+      <nav class="pagination" aria-label="Request pages"><button type="button" (click)="load(page() - 1)" [disabled]="loading() || page() === 0">Previous</button><span>Page {{ page() + 1 }} of {{ totalPages() || 1 }}</span><button type="button" (click)="load(page() + 1)" [disabled]="loading() || page() + 1 >= totalPages()">Next</button></nav>
+    </section>
+  </div>
+  @if (selected(); as request) {
+    <section class="panel details" aria-labelledby="details-heading"><div class="panel-heading"><h2 id="details-heading">{{ request.title }}</h2><button type="button" (click)="selected.set(null)">Close details</button></div><p class="description">{{ request.description }}</p><p class="muted">{{ label(request.status) }} · {{ label(request.priority) }} priority · Updated {{ request.updatedAt | date:'medium' }}</p><small class="muted">Reference: {{ request.id }}</small></section>
+  }
+</main>
+<footer>Service Desk · Built with Java, Angular & PostgreSQL</footer>

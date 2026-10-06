@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: service-desk
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/service_desk}
+    username: ${DB_USER:service_desk}
+    password: ${DB_PASSWORD:local-development-only}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  mvc:
+    problemdetails:
+      enabled: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
+server:
+  error:
+    include-message: never
