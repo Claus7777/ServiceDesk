@@ -2,15 +2,17 @@
 
 Use these as work sessions, not a promise to finish each task in one day. A session can end with a failing test that demonstrates the next problem, a reviewed design, or a small completed feature. Prefer honest progress to commit streaks.
 
-## Milestone 1 — foundation (implemented; container verification pending)
+## Milestone 1 — foundation (implemented and container verification passed)
 
 Java API, PostgreSQL migration, Angular dashboard, creation/listing/filtering/status updates, fast tests, integration test definitions, Docker and CI configuration. Read the code, run the suites, and explain the HTTP flow before extending it.
+
+Verified on 2026-10-15: healthy Compose stack, 13 backend tests including PostgreSQL integration tests, 6 Angular tests inside Docker, and the full HTTP smoke check. See `docs/devlog.md` for evidence. CI on GitHub and browser interaction tests remain pending.
 
 ## Next 20 sessions
 
 | Session | Deliverable | Acceptance evidence |
 | --- | --- | --- |
-| 1 | Run Docker stack and full backend `verify` | Record actual results and fix any failures |
+| 1 — complete | Run Docker stack and full backend `verify` | Passed on 2026-10-15; results recorded in the journal |
 | 2 | Interview one prospective user | Document their workflow and top three problems |
 | 3 | Write account/role API and data design | ADR with requester/staff permissions matrix |
 | 4 | Add user migration and password hashing | Persistence and password verification tests |

@@ -96,6 +96,36 @@ pnpm start
 
 The Angular development server proxies `/api/**` to `localhost:8080`. The API defaults match `.env.example`; custom values must be supplied as `DB_URL`, `DB_USER`, and `DB_PASSWORD` environment variables when Java runs on the host. Compose `.env` is not automatically read by Spring Boot.
 
+## Windows Docker troubleshooting
+
+Check both the client and engine before starting the stack:
+
+```powershell
+docker version
+docker compose version
+wsl --version
+```
+
+`docker version` must show a **Server** section. A working CLI/Compose version alone does not mean the Linux engine is running. Start Docker Desktop and wait for the engine to become ready.
+
+If `docker` is missing from an existing terminal after installation, open a new terminal. For a per-user Docker Desktop installation, the CLI may be at `$env:LOCALAPPDATA\Programs\DockerDesktop\resources\bin\docker.exe` instead of under Program Files.
+
+If Windows reports WSL is not installed, Docker's WSL backend cannot start. Installing WSL is a separate administrator-level Windows setup step and may require a restart. With the machine owner's approval, run this in an administrator PowerShell window:
+
+```powershell
+wsl --install --no-distribution
+```
+
+Restart Windows if requested, open Docker Desktop again, then verify `wsl --version` and the Server section of `docker version`. Docker Desktop does not require an additional user Linux distribution for this project. See [Docker's WSL backend requirements](https://docs.docker.com/desktop/features/wsl/) and [Microsoft's WSL installation options](https://learn.microsoft.com/en-us/windows/wsl/basic-commands).
+
+Compose configuration can be validated without a running engine, but this does not build images or run tests:
+
+```powershell
+docker compose config --quiet
+docker compose -f compose.yaml -f compose.dev.yaml config --quiet
+docker compose --profile test config --quiet
+```
+
 ## Implemented
 
 - Create requests with title, description, and priority.
@@ -122,4 +152,6 @@ See [the daily roadmap](docs/roadmap.md) for small deliverables and acceptance c
 
 ## Verification status
 
-See [the development journal](docs/devlog.md) for the initial local validation and outstanding container checks. A configured workflow is not evidence of a passing GitHub run.
+Verified locally on 2026-10-15 with Docker Desktop 4.95.0: production images build, all three application containers are healthy, 13 backend tests (including real PostgreSQL integration tests) pass, all 6 Angular tests pass inside Docker, and the HTTP smoke check passes through Nginx. The backend suite ran on host Java 22 targeting Java 21; the deployed API runs on Java 21 in Docker.
+
+See [the development journal](docs/devlog.md) for the commands, results, and historical setup troubleshooting. GitHub Actions and full browser interaction/accessibility testing remain unverified. A configured workflow is not evidence of a passing GitHub run.
