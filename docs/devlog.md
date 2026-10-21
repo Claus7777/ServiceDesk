@@ -1,5 +1,22 @@
 # Development journal
 
+## 2026-10-21 — Account persistence and permissions design
+
+**Goal:** establish tested account storage and an explicit access-control contract before implementing login.
+
+**Implemented:** V2 adds `accounts` with canonical unique email, display name, password hash, requester/staff role, enabled flag, and creation timestamp. The internal creation service validates commands, normalizes email/name, always assigns REQUESTER, hashes passwords with BCrypt cost 12 and an algorithm prefix, and returns a profile-only DTO. Passwords are preserved exactly and bounded to at least 12 Unicode code points and at most 72 UTF-8 bytes. Command string output redacts credentials. No account HTTP endpoints or default credentials were added.
+
+**Design:** ADR 001 defines the requester/staff permission matrix, same-origin server sessions and CSRF direction, and a plan for ownership on existing demo requests. These authorization rules are planned behavior, not yet enforced. Staff provisioning and raced-duplicate HTTP error handling remain future work.
+
+**Verification:**
+
+- Maven `verify`: 20 fast JUnit/Mockito tests and 5 Testcontainers PostgreSQL integration tests passed; zero failures, errors, or skips. New tests cover validation before hashing, normalization, requester default, duplicate detection, UTF-8 limits, redaction, real BCrypt salting/matching, persisted credentials, uniqueness, and canonical-email database constraints.
+- `docker compose up --build --wait --wait-timeout 240`: succeeded; all three application containers healthy. Existing PostgreSQL volume upgraded from V1 to V2. A before/after ID comparison confirmed its one pre-existing request was preserved; Flyway recorded both migrations successful.
+- HTTP smoke check passed after rebuilding. It added another resolved test request to the local database.
+- No frontend source changed; the Angular unit suite was not rerun. Frontend production image rebuilt using cached unchanged sources. Host tests used Java 22 targeting 21; deployed backend runs Java 21. GitHub Actions and browser interaction testing remain unverified in this session.
+
+**Next:** implement session login/logout and CSRF handling, then enforce role/ownership rules with unauthorized, forbidden, and cross-user tests before adding Angular session UI.
+
 ## 2026-10-15 — Container verification passed after Docker update
 
 **Environment:** Docker Desktop 4.95.0, Linux engine 29.8.2, Compose v5.6.0. The engine is reachable following the user's Desktop update; the earlier runtime socket startup failure no longer blocks this project.

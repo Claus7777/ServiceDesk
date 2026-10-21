@@ -7,6 +7,9 @@ Test behaviors and failures that matter to a user, then exercise the real databa
 | `RequestServiceTest` | JUnit Jupiter + Mockito | New status, normalization, deterministic UTC times, missing requests, no-op updates |
 | `RequestControllerTest` | MockMvc + Mockito | HTTP status/Location, invalid input, unknown enums, filter forwarding, Problem Details |
 | `RequestApiIT` | Spring context + Testcontainers PostgreSQL | Flyway startup, JPA mappings, persisted status update, literal search, filtering, pagination validation |
+| `AccountServiceTest` | JUnit Jupiter + Mockito + Bean Validation | Canonical email/name, requester-only creation, validation before hashing, duplicate precheck, UTF-8 password byte limits, credential redaction |
+| `PasswordConfigurationTest` | Production BCrypt encoder | Salted hashes, work factor, correct/incorrect password matching |
+| `AccountPersistenceIT` | Spring context + Testcontainers PostgreSQL | Reloaded profile/hash, database uniqueness, canonical-email constraints |
 | `request-api.service.spec.ts` | Angular HTTP testing + Vitest | Query parameters, empty filters, PATCH contract |
 | `app.component.spec.ts` | Angular TestBed + Vitest | Empty state, whitespace validation, duplicate submission, draft preservation on errors |
 | `scripts/smoke.py` | Python HTTP client + Compose | Nginx serving and proxy, create/read/update/persistence/filter flow |

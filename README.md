@@ -134,6 +134,7 @@ docker compose --profile test config --quiet
 - Server and client validation, loading/empty/error states, duplicate-submit protection.
 - UTC timestamps, optimistic locking, versioned SQL schema.
 - Container definitions, health checks, local persistence, CI configuration.
+- Internal account persistence with canonical unique emails, requester defaults, and salted BCrypt password hashes. Login and API permission enforcement are the next milestone; account creation has no HTTP endpoint yet.
 
 ## Next milestones
 
@@ -144,6 +145,7 @@ See [the daily roadmap](docs/roadmap.md) for small deliverables and acceptance c
 ## Documentation
 
 - [Architecture and decisions](docs/architecture.md)
+- [Accounts and permissions design](docs/adr/001-accounts-and-permissions.md)
 - [API contract and examples](docs/api.md)
 - [Testing strategy](docs/testing.md)
 - [Daily roadmap](docs/roadmap.md)
@@ -152,6 +154,6 @@ See [the daily roadmap](docs/roadmap.md) for small deliverables and acceptance c
 
 ## Verification status
 
-Verified locally on 2026-10-15 with Docker Desktop 4.95.0: production images build, all three application containers are healthy, 13 backend tests (including real PostgreSQL integration tests) pass, all 6 Angular tests pass inside Docker, and the HTTP smoke check passes through Nginx. The backend suite ran on host Java 22 targeting Java 21; the deployed API runs on Java 21 in Docker.
+Verified locally on 2026-10-21 with Docker Desktop 4.95.0: production images build, all three application containers are healthy, all 25 backend tests pass (20 fast tests and 5 PostgreSQL integration tests), and the HTTP smoke check passes through Nginx. Flyway upgraded the existing database from V1 to V2 while preserving its existing request. The backend suite ran on host Java 22 targeting Java 21; the deployed API runs on Java 21 in Docker. All 6 Angular tests last passed inside Docker on 2026-10-15; frontend source was unchanged in the account-persistence milestone.
 
 See [the development journal](docs/devlog.md) for the commands, results, and historical setup troubleshooting. GitHub Actions and full browser interaction/accessibility testing remain unverified. A configured workflow is not evidence of a passing GitHub run.

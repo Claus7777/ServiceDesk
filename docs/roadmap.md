@@ -14,8 +14,8 @@ Verified on 2026-10-15: healthy Compose stack, 13 backend tests including Postgr
 | --- | --- | --- |
 | 1 — complete | Run Docker stack and full backend `verify` | Passed on 2026-10-15; results recorded in the journal |
 | 2 | Interview one prospective user | Document their workflow and top three problems |
-| 3 | Write account/role API and data design | ADR with requester/staff permissions matrix |
-| 4 | Add user migration and password hashing | Persistence and password verification tests |
+| 3 — complete | Write account/role API and data design | ADR 001 records the permissions matrix and planned auth contract |
+| 4 — complete | Add user migration and password hashing | Passed on 2026-10-21: 25 backend tests, healthy Docker upgrade to V2, existing request preserved, smoke check passed |
 | 5 | Add login/logout with Spring Security | Successful and rejected-login tests |
 | 6 | Protect endpoints by role/ownership | 401, 403, and cross-user access tests |
 | 7 | Add Angular login and session handling | Loading, failed login, and expired-session behavior |

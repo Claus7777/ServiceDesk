@@ -2,6 +2,8 @@
 
 Base path: `/api`. JSON request/response bodies; enum values are uppercase. Timestamps are ISO-8601 UTC. Java is available through the frontend proxy at `http://localhost:4200/api` in Compose.
 
+Account persistence was added on 2026-10-21, but account creation/login endpoints and authorization enforcement are not exposed yet. The request API below retains the shared local-demo behavior. See [ADR 001](adr/001-accounts-and-permissions.md) for the planned permissions and authentication contract.
+
 ## Endpoints
 
 | Method | Path | Result |

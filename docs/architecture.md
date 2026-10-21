@@ -37,6 +37,8 @@ The controller validates the HTTP boundary. The service owns transactions and no
 
 ## Database
 
+`accounts` (migration V2): UUID, unique canonical email, display name, `{bcrypt}` password hash, requester/staff role, enabled flag, and UTC creation timestamp. The internal creation service validates input and always creates requesters. See [ADR 001](adr/001-accounts-and-permissions.md) for the permission matrix, password policy, and planned session/ownership behavior. There are no account HTTP endpoints or enforced permissions yet.
+
 `service_requests`: UUID primary key; title (120), description (4,000), priority and status strings with CHECK constraints; creation/update timestamps with time zones; numeric optimistic-lock version. Indexes support newest-first ordering and status filtering. Hibernate initializes version and the service initializes UUID/timestamps.
 
 Never edit `V1` after a database has applied it. Add `V2__description.sql` for subsequent changes. Flyway detects checksum changes; deleting data is not a migration strategy.
@@ -49,4 +51,4 @@ Application dependency versions and the pnpm lockfile are committed. Base image 
 
 ## Deliberate first-release limits
 
-No accounts, roles, organization isolation, assignments, comments, audit history, deletion, notifications, attachment uploads, or public deployment yet. Status changes are last-write-wins outside overlapping JPA transactions. Server-side idempotency keys are not implemented; UI protection prevents double clicks during one in-flight submission. Full browser E2E and keyboard/screen-reader review remain planned.
+Account persistence and role values are implemented internally; account HTTP endpoints, authentication, permission enforcement, organization isolation, assignments, comments, audit history, deletion, notifications, attachment uploads, and public deployment remain planned. Status changes are last-write-wins outside overlapping JPA transactions. Server-side idempotency keys are not implemented; UI protection prevents double clicks during one in-flight submission. Full browser E2E and keyboard/screen-reader review remain planned.
